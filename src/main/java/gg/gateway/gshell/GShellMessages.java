@@ -1,6 +1,9 @@
 package gg.gateway.gshell;
 
 import org.bukkit.ChatColor;
+import org.bukkit.permissions.Permissible;
+
+import java.util.ArrayList;
 
 public class GShellMessages {
 
@@ -23,17 +26,19 @@ public class GShellMessages {
     static String PROCESS_LISTEN_MESSAGE(long id) { return ChatColor.translateAlternateColorCodes('&', "&2Listening to process output. &a[ID: " + id + "]"); }
     static String PROCESS_UNLISTEN_MESSAGE(long id) { return ChatColor.translateAlternateColorCodes('&', "&2Stopped listening to process output. &a[ID: " + id + "]"); }
 
-    static String[] HELP_MESSAGES(String label) {
-        return new String[] {
-                "",
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "&2Arguments for &a/" + label),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "run <args...> &7runs a process"),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "quiet <args...> &7runs a process with no output"),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "list &7shows running processes"),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "stop <id> &7stops a process"),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "kill <id> &7forcefully stops a process"),
-                ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "listen <id> &7toggles process output to your chat")
-        };
+    static String[] HELP_MESSAGES(String label, Permissible user) {
+        ArrayList<String> lines = new ArrayList<>();
+        lines.add("");
+        lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "&2Arguments for &a/" + label));
+
+        if (user.hasPermission(GShellPerms.RUN.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "run <args...> &7runs a process"));
+        if (user.hasPermission(GShellPerms.QUIET.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "quiet <args...> &7runs a process with no output"));
+        if (user.hasPermission(GShellPerms.LIST.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "list &7shows running processes"));
+        if (user.hasPermission(GShellPerms.STOP.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "stop <id> &7stops a process"));
+        if (user.hasPermission(GShellPerms.KILL.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "kill <id> &7forcefully stops a process"));
+        if (user.hasPermission(GShellPerms.LISTEN.toString())) lines.add(ChatColor.translateAlternateColorCodes('&', COMMAND_PREFIX + "listen <id> &7toggles process output to your chat"));
+
+        return lines.toArray(new String[0]);
     }
 
 }

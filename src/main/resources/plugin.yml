@@ -18,7 +18,10 @@ permissions:
     description: Full access to GShell plugin
     default: op
   gshell.use.run:
-    description: Access to /gshell run and /gshell quiet arguments
+    description: Access to /gshell run argument
+    default: op
+  gshell.use.quiet:
+    description: Access to /gshell quiet argument
     default: op
   gshell.use.list:
     description: Access to /gshell list argument

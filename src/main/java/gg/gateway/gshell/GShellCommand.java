@@ -29,7 +29,7 @@ public class GShellCommand implements CommandExecutor {
 
         switch (args[0].toLowerCase()) {
             case "run":
-                if (!sender.hasPermission("gshell.use.run")) {
+                if (!sender.hasPermission(GShellPerms.RUN.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -46,7 +46,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             case "quiet":
-                if (!sender.hasPermission("gshell.use.run")) {
+                if (!sender.hasPermission(GShellPerms.QUIET.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -60,7 +60,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             case "list":
-                if (!sender.hasPermission("gshell.use.list")) {
+                if (!sender.hasPermission(GShellPerms.LIST.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -75,7 +75,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             case "stop":
-                if (!sender.hasPermission("gshell.use.stop")) {
+                if (!sender.hasPermission(GShellPerms.STOP.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -101,7 +101,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             case "kill":
-                if (!sender.hasPermission("gshell.use.kill")) {
+                if (!sender.hasPermission(GShellPerms.KILL.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -127,7 +127,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             case "listen":
-                if (!sender.hasPermission("gshell.use.listen")) {
+                if (!sender.hasPermission(GShellPerms.LISTEN.toString())) {
                     sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
                     break;
                 }
@@ -156,7 +156,7 @@ public class GShellCommand implements CommandExecutor {
 
                 break;
             default: // help menu
-                for (String message : GShellMessages.HELP_MESSAGES(label)) {
+                for (String message : GShellMessages.HELP_MESSAGES(label, sender)) {
                     sender.sendMessage(message);
                 }
 
