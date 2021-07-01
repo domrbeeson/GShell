@@ -3,12 +3,13 @@ package gg.gateway.gshell;
 import gg.gateway.gshell.interfaces.GProcessInfo;
 import gg.gateway.gshell.interfaces.GProcessManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +31,7 @@ public class DefaultProcessManager implements GProcessManager {
         ProcessBuilder builder = new ProcessBuilder(args);
         builder.redirectErrorStream(true);
         Process process;
+        final Date startTime = new Date();
         try {
             process = builder.start();
         } catch (IOException e) {
@@ -52,13 +54,28 @@ public class DefaultProcessManager implements GProcessManager {
         scheduler.runTaskAsynchronously(plugin, () -> {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            PrintWriter logWriter = null;
 
             String line;
             try {
+
+                boolean isPlayer = executor instanceof Player;
+                String executorId = isPlayer ? ((Player) executor).getUniqueId().toString() : "CONSOLE";
+                String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime);
+                String logName = executorId + " " + dateString;
+
+                logWriter = new PrintWriter(new File(GShell.PROCESS_LOGS_FOLDER + "/" + logName + ".txt"));
+                logWriter.println("Executor: " + executorId + (isPlayer ? " (" + ((Player) executor).getName() + ")" : ""));
+                logWriter.println("Run date: " + dateString);
+                logWriter.println("Command:  " + String.join(" ", args));
+                logWriter.println("Output:");
+
                 while ((line = reader.readLine()) != null) {
 
                     final String outputLine = line;
+
                     info.getOutputListeners().forEach(listener -> listener.sendMessage(outputLine));
+                    logWriter.println(line);
 
                 }
 
@@ -69,6 +86,8 @@ public class DefaultProcessManager implements GProcessManager {
             } finally {
 
                 // process has exited, do cleanup
+                if (logWriter != null) logWriter.close();
+
                 String message = GShellMessages.PROCESS_EXIT_MESSAGE(id, process.exitValue());
 
                 info.registerOutputListener(info.getExecutor()); // make sure person that executed the command knows the process has ended, even if they ran it quietly
