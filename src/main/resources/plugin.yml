@@ -1,0 +1,34 @@
+main: gg.gateway.gshell.GShell
+name: ${project.artifactId}
+author: MFN
+api-version: 1.13
+website: gateway.gg
+version: ${project.version}
+commands:
+  gshell:
+    aliases: [shell, sh]
+    usage: /gshell help
+    description: GShell command.
+    permission: gshell.use
+permissions:
+  gshell.use:
+    description: Access to /gshell command
+    default: op
+  gshell.*:
+    description: Full access to GShell plugin
+    default: op
+  gshell.use.run:
+    description: Access to /gshell run and /gshell quiet arguments
+    default: op
+  gshell.use.list:
+    description: Access to /gshell list argument
+    default: op
+  gshell.use.stop:
+    description: Access to /gshell stop argument
+    default: op
+  gshell.use.kill:
+    description: Access to /gshell kill argument
+    default: op
+  gshell.use.listen:
+    description: Access to /gshell listen argument
+    default: op
