@@ -5,7 +5,6 @@ import gg.gateway.gshell.interfaces.GProcessManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -69,8 +68,7 @@ public class GShellCommand implements CommandExecutor {
                 for (Map.Entry<Long, GProcessInfo> entry : processes.entrySet()) {
                     GProcessInfo info = entry.getValue();
 
-                    String startedBy = info.getExecutor() instanceof Player ? ((Player) info.getExecutor()).getDisplayName() : "[CONSOLE]";
-                    sender.sendMessage(GShellMessages.RUNNING_PROCESSES_BODY_MESSAGE(entry.getKey(), startedBy, info.getArgs()));
+                    sender.sendMessage(GShellMessages.RUNNING_PROCESSES_BODY_MESSAGE(entry.getKey(), GShell.convertCommandSenderToName(info.getExecutor()), info.getArgs()));
                 }
 
                 break;
