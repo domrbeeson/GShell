@@ -7,7 +7,8 @@ public enum GShellPerms {
     LIST,
     STOP,
     KILL,
-    LISTEN;
+    LISTEN,
+    INFO;
 
     // convert enum to permission node
     @Override

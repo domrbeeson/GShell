@@ -5,7 +5,6 @@ import gg.gateway.gshell.interfaces.GProcessManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -69,8 +68,7 @@ public class GShellCommand implements CommandExecutor {
                 for (Map.Entry<Long, GProcessInfo> entry : processes.entrySet()) {
                     GProcessInfo info = entry.getValue();
 
-                    String startedBy = info.getExecutor() instanceof Player ? ((Player) info.getExecutor()).getDisplayName() : "[CONSOLE]";
-                    sender.sendMessage(GShellMessages.RUNNING_PROCESSES_BODY_MESSAGE(entry.getKey(), startedBy, info.getArgs()));
+                    sender.sendMessage(GShellMessages.RUNNING_PROCESSES_BODY_MESSAGE(entry.getKey(), GShell.convertCommandSenderToName(info.getExecutor()), info.getArgs()));
                 }
 
                 break;
@@ -153,6 +151,31 @@ public class GShellCommand implements CommandExecutor {
                     info.unregisterOutputListener(sender);
                     sender.sendMessage(GShellMessages.PROCESS_UNLISTEN_MESSAGE(listenId));
                 }
+
+                break;
+            case "info":
+                if (!sender.hasPermission(GShellPerms.INFO.toString())) {
+                    sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
+                    break;
+                }
+
+                if (commandArgs.length == 0) {
+                    sender.sendMessage(GShellMessages.COMMAND_MISSING_ARGS_MESSAGE(label, args[0], "<id>"));
+                    break;
+                }
+                long infoId;
+                try {
+                    infoId = Long.parseLong(commandArgs[0]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(GShellMessages.INVALID_ID_MESSAGE);
+                    break;
+                }
+                if (!processManager.isIdRunning(infoId)) {
+                    sender.sendMessage(GShellMessages.PROCESS_NOT_RUNNING_MESSAGE(infoId));
+                    break;
+                }
+
+                sender.sendMessage(GShellMessages.PROCESS_INFO_MESSAGES(infoId, processManager.getProcessInfo(infoId)));
 
                 break;
             default: // help menu

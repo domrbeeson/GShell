@@ -35,3 +35,6 @@ permissions:
   gshell.use.listen:
     description: Access to /gshell listen argument
     default: op
+  gshell.use.info:
+    description: Access to /gshell info argument
+    default: op

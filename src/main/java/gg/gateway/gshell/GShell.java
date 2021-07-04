@@ -2,6 +2,8 @@ package gg.gateway.gshell;
 
 import gg.gateway.gshell.interfaces.GProcessInfo;
 import gg.gateway.gshell.interfaces.GProcessManager;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -13,6 +15,10 @@ public class GShell extends JavaPlugin {
 
     public static final String PLUGIN_FOLDER = "plugins/GShell";
     public static final String PROCESS_LOGS_FOLDER = PLUGIN_FOLDER + "/logs";
+
+    public static String convertCommandSenderToName(CommandSender sender) {
+        return sender instanceof Player ? sender.getName() : "[CONSOLE]";
+    }
 
     @Override
     public void onEnable() {
