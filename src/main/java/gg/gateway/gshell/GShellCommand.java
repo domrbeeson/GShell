@@ -155,6 +155,31 @@ public class GShellCommand implements CommandExecutor {
                 }
 
                 break;
+            case "info":
+                if (!sender.hasPermission(GShellPerms.INFO.toString())) {
+                    sender.sendMessage(GShellMessages.NO_PERMISSION_MESSAGE);
+                    break;
+                }
+
+                if (commandArgs.length == 0) {
+                    sender.sendMessage(GShellMessages.COMMAND_MISSING_ARGS_MESSAGE(label, args[0], "<id>"));
+                    break;
+                }
+                long infoId;
+                try {
+                    infoId = Long.parseLong(commandArgs[0]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(GShellMessages.INVALID_ID_MESSAGE);
+                    break;
+                }
+                if (!processManager.isIdRunning(infoId)) {
+                    sender.sendMessage(GShellMessages.PROCESS_NOT_RUNNING_MESSAGE(infoId));
+                    break;
+                }
+
+                sender.sendMessage(GShellMessages.PROCESS_INFO_MESSAGES(infoId, processManager.getProcessInfo(infoId)));
+
+                break;
             default: // help menu
                 for (String message : GShellMessages.HELP_MESSAGES(label, sender)) {
                     sender.sendMessage(message);
