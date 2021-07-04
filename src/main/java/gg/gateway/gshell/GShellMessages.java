@@ -1,9 +1,12 @@
 package gg.gateway.gshell;
 
+import gg.gateway.gshell.interfaces.GProcessInfo;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GShellMessages {
 
@@ -41,8 +44,30 @@ public class GShellMessages {
         if (user.hasPermission(GShellPerms.STOP.toString())) lines.add(convertChatColours("stop <id> &7stops a process"));
         if (user.hasPermission(GShellPerms.KILL.toString())) lines.add(convertChatColours("kill <id> &7forcefully stops a process"));
         if (user.hasPermission(GShellPerms.LISTEN.toString())) lines.add(convertChatColours("listen <id> &7toggles process output to your chat"));
+        if (user.hasPermission(GShellPerms.INFO.toString())) lines.add(convertChatColours("info <id> &7shows detailed process information"));
 
         return lines.toArray(new String[0]);
+    }
+
+    static String[] PROCESS_INFO_MESSAGES(long id, GProcessInfo info) {
+        String[] lines = new String[6];
+
+        lines[0] = convertChatColours("&2Process info: &a[ID: " + id + "]");
+        lines[1] = convertChatColours(" Executor: &7" + GShell.convertCommandSenderToName(info.getExecutor()));
+        lines[2] = convertChatColours(" Start time: &7" + info.getStartTime().toString());
+        int runningTime = (int) Math.floor((new Date().getTime() - info.getStartTime().getTime()) / 1000.0);
+        lines[3] = convertChatColours(" Running time: &7" + runningTime + (runningTime == 1 ? " second" : " seconds"));
+        lines[4] = convertChatColours(" Arguments: &7\"" + String.join(" ", info.getArgs()) + "\"");
+
+        String[] listenerUsernames = new String[info.getOutputListeners().size()];
+        int i = 0;
+        for (CommandSender listener : info.getOutputListeners()) {
+            listenerUsernames[i] = GShell.convertCommandSenderToName(listener);
+            i++;
+        }
+        lines[5] = convertChatColours(" Output listeners: &7" + String.join(", ", listenerUsernames));
+
+        return lines;
     }
 
 }
